@@ -45,10 +45,17 @@ examples_data, examples_target = examples.next()
 # print(examples_data.shape, examples_target.shape)
 # print(examples_data[1][0])
 
+<<<<<<< HEAD
 for i in range(6):
     plt.subplot(2,3,i+1)
     plt.imshow(examples_data[i][0], cmap='gray')
 plt.show()
+=======
+# for i in range(6):
+#     plt.subplot(2,3,i+1)
+#     plt.imshow(examples_data[i][0], cmap='gray')
+# plt.show()
+>>>>>>> 5276f67f21e2bbcf18d5dbca77ec9bd1aceb7085
 
 # Fully connected neural network with one hidden layer
 class NeuralNet(nn.Module):

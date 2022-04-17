@@ -6,7 +6,7 @@ from torch.optim import lr_scheduler
 import numpy as np
 import torchvision
 from torchvision import datasets, models, transforms
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import time
 import os
 import copy
@@ -43,14 +43,14 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(class_names)
 
 
-def imshow(inp, title):
-    """Imshow for Tensor."""
-    inp = inp.numpy().transpose((1, 2, 0))
-    inp = std * inp + mean
-    inp = np.clip(inp, 0, 1)
-    plt.imshow(inp)
-    plt.title(title)
-    plt.show()
+# def imshow(inp, title):
+#     """Imshow for Tensor."""
+#     inp = inp.numpy().transpose((1, 2, 0))
+#     inp = std * inp + mean
+#     inp = np.clip(inp, 0, 1)
+#     plt.imshow(inp)
+#     plt.title(title)
+#     plt.show()
 
 
 # Get a batch of training data
@@ -59,7 +59,7 @@ inputs, classes = next(iter(dataloaders['train']))
 # Make a grid from batch
 out = torchvision.utils.make_grid(inputs)
 
-imshow(out, title=[class_names[x] for x in classes])
+# imshow(out, title=[class_names[x] for x in classes])
 
 def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()

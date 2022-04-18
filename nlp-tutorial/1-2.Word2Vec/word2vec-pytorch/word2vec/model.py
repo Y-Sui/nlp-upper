@@ -15,24 +15,28 @@ class SkipGramModel(nn.Module):
         super(SkipGramModel, self).__init__()
         self.emb_size = emb_size
         self.emb_dimension = emb_dimension
+
+        # nn.Embedding? 如何操作的,embedding的属性有哪些
         self.u_embeddings = nn.Embedding(emb_size, emb_dimension, sparse=True)
         self.v_embeddings = nn.Embedding(emb_size, emb_dimension, sparse=True)
 
         initrange = 1.0 / self.emb_dimension
-        init.uniform_(self.u_embeddings.weight.data, -initrange, initrange)
-        init.constant_(self.v_embeddings.weight.data, 0)
+
+        # 初始化模型参数, torch.nn.init
+        init.uniform_(self.u_embeddings.weight.data, -initrange, initrange) # 均匀化模型参数(value, a, b)
+        init.constant_(self.v_embeddings.weight.data, 0) # 参数初始化模型参数(value, default_constant)
 
     def forward(self, pos_u, pos_v, neg_v):
         emb_u = self.u_embeddings(pos_u)
         emb_v = self.v_embeddings(pos_v)
-        emb_neg_v = self.v_embeddings(neg_v)
+        emb_neg_v = self.v_embeddings(neg_v) # Negative sampling
 
         score = torch.sum(torch.mul(emb_u, emb_v), dim=1)
-        score = torch.clamp(score, max=10, min=-10)
-        score = -F.logsigmoid(score)
+        score = torch.clamp(score, max=10, min=-10) # 将结果夹紧到min-max范围内
+        score = -F.logsigmoid(score) # log(1/(1+exp(-score)))
 
-        neg_score = torch.bmm(emb_neg_v, emb_u.unsqueeze(2)).squeeze()
-        neg_score = torch.clamp(neg_score, max=10, min=-10)
+        neg_score = torch.bmm(emb_neg_v, emb_u.unsqueeze(2)).squeeze() # 矩阵乘法 bmm
+        neg_score = torch.clamp(neg_score, max=10, min=-10) # 将结果夹紧到min-max范围内
         neg_score = -torch.sum(F.logsigmoid(-neg_score), dim=1)
 
         return torch.mean(score + neg_score)

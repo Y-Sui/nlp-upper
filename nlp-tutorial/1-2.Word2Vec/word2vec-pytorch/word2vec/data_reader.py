@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import torch
 from torch.utils.data import Dataset
 
@@ -25,6 +26,7 @@ class DataReader:
         self.initTableNegatives()
         self.initTableDiscards()
 
+
     def read_words(self, min_count):
         word_frequency = dict()
         for line in open(self.inputFileName, encoding="utf8"):
@@ -34,7 +36,7 @@ class DataReader:
                 for word in line:
                     if len(word) > 0:
                         self.token_count += 1
-                        word_frequency[word] = word_frequency.get(word, 0) + 1
+                        word_frequency[word] = word_frequency.get(word, 0) + 1 # dict.get(key.value, defaultValue)
 
                         if self.token_count % 1000000 == 0:
                             print("Read " + str(int(self.token_count / 1000000)) + "M words.")

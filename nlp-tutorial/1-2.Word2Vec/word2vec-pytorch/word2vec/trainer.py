@@ -33,7 +33,7 @@ class Word2VecTrainer:
 
         for iteration in range(self.iterations):
 
-            print("\n\n\nIteration: " + str(iteration + 1))
+            print("Iteration: " + str(iteration + 1))
             optimizer = optim.SparseAdam(self.skip_gram_model.parameters(), lr=self.initial_lr)
             scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, len(self.dataloader))
 
@@ -45,11 +45,11 @@ class Word2VecTrainer:
                     pos_v = sample_batched[1].to(self.device)
                     neg_v = sample_batched[2].to(self.device)
 
-                    scheduler.step()
                     optimizer.zero_grad()
                     loss = self.skip_gram_model.forward(pos_u, pos_v, neg_v)
                     loss.backward()
                     optimizer.step()
+                    scheduler.step()
 
                     running_loss = running_loss * 0.9 + loss.item() * 0.1
                     if i > 0 and i % 500 == 0:
@@ -59,5 +59,5 @@ class Word2VecTrainer:
 
 
 if __name__ == '__main__':
-    w2v = Word2VecTrainer(input_file="input.txt", output_file="out.vec")
+    w2v = Word2VecTrainer(input_file="./dataset/WikiQA-train.txt", output_file="out.vec")
     w2v.train()
